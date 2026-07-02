@@ -17,6 +17,12 @@ class UserRepository(ABC):
     @abstractmethod
     async def list_all(self) -> list[User]: ...
 
+    @abstractmethod
+    async def update(self, user: User) -> User: ...
+
+    @abstractmethod
+    async def delete(self, user: User) -> None: ...
+
 # REPOSITORY IMPLEMENTATION
 class SQLAlchemyUserRepository(UserRepository):
     def __init__(self, db: AsyncSession):
@@ -43,3 +49,14 @@ class SQLAlchemyUserRepository(UserRepository):
     async def list_all(self) -> list[User]:
         result = await self.db.execute(select(User))
         return result.scalars().all()
+
+    # update user
+    async def update(self, user: User) -> User:
+        await self.db.commit()
+        await self.db.refresh(user)
+        return user
+
+    # delete user
+    async def delete(self, user: User) -> None:
+        await self.db.delete(user)
+        await self.db.commit()

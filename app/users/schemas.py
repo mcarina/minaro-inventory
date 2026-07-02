@@ -19,3 +19,10 @@ class UserResponse(BaseModel):
 # Listagem de usuarios/ get
 class UserListResponse(BaseModel):
     users: list[UserResponse]
+
+# atualizacao do usuario/ patch
+class UserUpdate(BaseModel):
+    nome: str | None = None
+    email: EmailStr | None = None
+    password: str | None = None
+    ativo: bool | None = None
