@@ -14,7 +14,8 @@ from app.users.user_role_service import (
     RoleAlreadyAssignedError,
     RoleNotAssignedError,
 )
-
+from app.auth.dependencies import get_current_user
+from app.users.models.user import User
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -37,13 +38,17 @@ async def create_user(
 @router.get("/", response_model=UserListResponse)
 async def list_users(
     service: UserServiceImpl = Depends(get_user_service),
+    current_user: User = Depends(get_current_user),
 ):
     users = await service.list_users()
     return UserListResponse(users=users)
 
 # rota get by id
 @router.get("/{user_id}", response_model=UserResponse)
-async def get_user(user_id: int, service: UserServiceImpl = Depends(get_user_service)):
+async def get_user(user_id: int, 
+    service: UserServiceImpl = Depends(get_user_service),
+    current_user: User = Depends(get_current_user),
+):
     user = await service.get_by_id(user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="usuário não encontrado")
@@ -55,6 +60,7 @@ async def update_user(
     user_id: int,
     data: UserUpdate,
     service: UserServiceImpl = Depends(get_user_service),
+    current_user: User = Depends(get_current_user),
 ):
     try:
         user = await service.update_user(
@@ -73,12 +79,15 @@ async def update_user(
 
 # rota delete, delete user
 @router.delete("/{user_id}", status_code=204)
-async def delete_user(user_id: int, service: UserServiceImpl = Depends(get_user_service)):
+async def delete_user(user_id: int, 
+    service: UserServiceImpl = Depends(get_user_service),
+    current_user: User = Depends(get_current_user),
+):
     success = await service.delete_user(user_id)
     if not success:
         raise HTTPException(status_code=404, detail="usuário não encontrado")
 
-# rota get, list users by role
+# 
 def get_user_role_service(db: AsyncSession = Depends(get_db)) -> UserRoleServiceImpl:
     user_repository = SQLAlchemyUserRepository(db)
     role_repository = SQLAlchemyRoleRepository(db)
@@ -91,6 +100,7 @@ async def assign_role(
     user_id: int,
     role_id: int,
     service: UserRoleServiceImpl = Depends(get_user_role_service),
+    current_user: User = Depends(get_current_user),
 ):
     try:
         await service.assign_role(user_id, role_id)
@@ -106,6 +116,7 @@ async def remove_role(
     user_id: int,
     role_id: int,
     service: UserRoleServiceImpl = Depends(get_user_role_service),
+    current_user: User = Depends(get_current_user),
 ):
     try:
         await service.remove_role(user_id, role_id)
@@ -118,6 +129,7 @@ async def remove_role(
 async def list_user_roles(
     user_id: int,
     service: UserRoleServiceImpl = Depends(get_user_role_service),
+    current_user: User = Depends(get_current_user),
 ):
     roles = await service.list_roles(user_id)
     return RoleListResponse(roles=roles)

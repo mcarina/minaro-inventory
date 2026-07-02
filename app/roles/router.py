@@ -4,6 +4,8 @@ from app.core.database import get_db
 from app.roles.repository import SQLAlchemyRoleRepository
 from app.roles.service import RoleServiceImpl
 from app.roles.schemas import RoleCreate, RoleResponse, RoleListResponse, RoleUpdate
+from app.auth.dependencies import get_current_user
+from app.users.models.user import User
 
 router = APIRouter(prefix="/roles", tags=["roles"])
 
@@ -16,6 +18,7 @@ def get_role_service(db: AsyncSession = Depends(get_db)) -> RoleServiceImpl:
 async def create_role(
     data: RoleCreate,
     service: RoleServiceImpl = Depends(get_role_service),
+    current_user: User = Depends(get_current_user),
 ):
     try:
         return await service.create_role(data.nome)
@@ -26,13 +29,17 @@ async def create_role(
 @router.get("/", response_model=RoleListResponse)
 async def list_roles(
     service: RoleServiceImpl = Depends(get_role_service),
+    current_user: User = Depends(get_current_user),
 ):
     roles = await service.list_roles()
     return RoleListResponse(roles=roles)
 
 # rota get by id
 @router.get("/{role_id}", response_model=RoleResponse)
-async def get_role(role_id: int, service: RoleServiceImpl = Depends(get_role_service)):
+async def get_role(role_id: int, 
+    service: RoleServiceImpl = Depends(get_role_service),
+    current_user: User = Depends(get_current_user),
+):
     role = await service.get_by_id(role_id)
     if role is None:
         raise HTTPException(status_code=404, detail="perfil não encontrado")
@@ -44,6 +51,7 @@ async def update_role(
     role_id: int,
     data: RoleUpdate,
     service: RoleServiceImpl = Depends(get_role_service),
+    current_user: User = Depends(get_current_user),
 ):
     try:
         role = await service.update_role(
@@ -63,6 +71,7 @@ async def update_role(
 async def delete_role(
     role_id: int,
     service: RoleServiceImpl = Depends(get_role_service),
+    current_user: User = Depends(get_current_user),
 ):
     success = await service.delete_role(role_id)
     if not success:
