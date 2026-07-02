@@ -8,7 +8,11 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from app.core.database import Base
-from app.models import categoria, marca, localizacao, produto, setor, estoque, movimentacao, patrimonio, emprestimo
+from app.models import produto, estoque, movimentacao, patrimonio, emprestimo
+from app.categorias.models import categoria
+from app.marcas.models import marca
+from app.localizacoes.models import localizacao
+from app.setores.models import setor
 from app.users.models import user, user_role
 from app.roles.models import role
 from app.core.config import settings
