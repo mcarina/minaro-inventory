@@ -8,7 +8,9 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from app.core.database import Base
-from app.models import user, role, user_role, categoria, marca, localizacao, produto, setor, estoque, movimentacao, patrimonio, emprestimo
+from app.models import categoria, marca, localizacao, produto, setor, estoque, movimentacao, patrimonio, emprestimo
+from app.users.models import user, user_role
+from app.roles.models import role
 from app.core.config import settings
 
 # this is the Alembic Config object, which provides
