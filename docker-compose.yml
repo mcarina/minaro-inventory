@@ -9,7 +9,7 @@ services:
       - db
     environment:
       - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/appdb
-
+      - SECRET_KEY=minha-chave-secreta-123
   db:
     image: postgres:16-alpine
     container_name: postgres_db

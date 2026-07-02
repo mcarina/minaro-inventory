@@ -49,6 +49,10 @@ class UserServiceImpl(UserService):
     async def get_by_id(self, user_id: int) -> User | None:
         return await self.repository.get_by_id(user_id)
 
+    # get user by email service
+    async def get_by_email(self, email: str) -> User | None:
+        return await self.repository.get_by_email(email)
+
     # list all users service
     async def list_users(self) -> list[User]:
         return await self.repository.list_all()
