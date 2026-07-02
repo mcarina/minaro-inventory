@@ -4,6 +4,17 @@ from app.core.database import get_db
 from app.users.repository import SQLAlchemyUserRepository
 from app.users.service import UserServiceImpl
 from app.users.schemas import UserCreate, UserResponse, UserListResponse, UserUpdate
+from app.roles.repository import SQLAlchemyRoleRepository
+from app.roles.schemas import RoleListResponse
+from app.users.user_role_repository import SQLAlchemyUserRoleRepository
+from app.users.user_role_service import (
+    UserRoleServiceImpl,
+    UserNotFoundError,
+    RoleNotFoundError,
+    RoleAlreadyAssignedError,
+    RoleNotAssignedError,
+)
+
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -66,3 +77,47 @@ async def delete_user(user_id: int, service: UserServiceImpl = Depends(get_user_
     success = await service.delete_user(user_id)
     if not success:
         raise HTTPException(status_code=404, detail="usuário não encontrado")
+
+# rota get, list users by role
+def get_user_role_service(db: AsyncSession = Depends(get_db)) -> UserRoleServiceImpl:
+    user_repository = SQLAlchemyUserRepository(db)
+    role_repository = SQLAlchemyRoleRepository(db)
+    user_role_repository = SQLAlchemyUserRoleRepository(db)
+    return UserRoleServiceImpl(user_repository, role_repository, user_role_repository)
+
+# rota post, assign role to user
+@router.post("/{user_id}/roles/{role_id}", status_code=204)
+async def assign_role(
+    user_id: int,
+    role_id: int,
+    service: UserRoleServiceImpl = Depends(get_user_role_service),
+):
+    try:
+        await service.assign_role(user_id, role_id)
+    except (UserNotFoundError, RoleNotFoundError):
+        raise HTTPException(status_code=404, detail="usuário ou perfil não encontrado")
+    except RoleAlreadyAssignedError:
+        raise HTTPException(status_code=409, detail="usuário já possui esse perfil")
+
+
+# rota delete, remove role from user
+@router.delete("/{user_id}/roles/{role_id}", status_code=204)
+async def remove_role(
+    user_id: int,
+    role_id: int,
+    service: UserRoleServiceImpl = Depends(get_user_role_service),
+):
+    try:
+        await service.remove_role(user_id, role_id)
+    except RoleNotAssignedError:
+        raise HTTPException(status_code=404, detail="usuário não possui esse perfil")
+
+
+# rota get, list roles of a user
+@router.get("/{user_id}/roles", response_model=RoleListResponse)
+async def list_user_roles(
+    user_id: int,
+    service: UserRoleServiceImpl = Depends(get_user_role_service),
+):
+    roles = await service.list_roles(user_id)
+    return RoleListResponse(roles=roles)
