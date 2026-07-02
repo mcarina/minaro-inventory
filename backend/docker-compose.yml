@@ -6,17 +6,17 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - db
+      - db_inventory
     environment:
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/appdb
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db_inventory:5432/db_inventory
       - SECRET_KEY=minha-chave-secreta-123
-  db:
+  db_inventory:
     image: postgres:16-alpine
-    container_name: postgres_db
+    container_name: db_inventory
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: appdb
+      POSTGRES_DB: db_inventory
     ports:
       - "5454:5432"
     volumes:
