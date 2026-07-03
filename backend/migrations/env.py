@@ -8,7 +8,9 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from app.core.database import Base
-from app.models import estoque, movimentacao, patrimonio, emprestimo
+from app.models import patrimonio, emprestimo
+from app.movimentacoes.models import movimentacao
+from app.estoques.models import estoque
 from app.produtos.models import produto
 from app.categorias.models import categoria
 from app.marcas.models import marca
