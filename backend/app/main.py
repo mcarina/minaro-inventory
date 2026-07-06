@@ -10,6 +10,7 @@ from app.produtos.router import router as produtos_router
 from app.estoques.router import router as estoque_router
 from app.movimentacoes.router import router as movimentacao_router
 from app.patrimonios.router import router as patrimonio_router
+from app.emprestimo.router import router as emprestimos_router
 
 app = FastAPI()
 app.include_router(users_router)
@@ -23,6 +24,7 @@ app.include_router(produtos_router)
 app.include_router(estoque_router)
 app.include_router(movimentacao_router)
 app.include_router(patrimonio_router)
+app.include_router(emprestimos_router)
 
 @app.get("/health")
 def health_check():
