@@ -23,6 +23,7 @@ async def create_emprestimo(
 ):
     try:
         return await service.create_emprestimo(
+            patrimonio_id=data.patrimonio_id,
             usuario_responsavel_id=data.usuario_responsavel_id,
             setor_id=data.setor_id,
             data_saida=data.data_saida,
@@ -41,15 +42,15 @@ async def list_emprestimos(
     emprestimos = await service.list_all()
     return EmprestimoListResponse(emprestimos=emprestimos)
 
-@router.get("/{emprestimo_id}", response_model=PatrimonioResponse)
-async def get_patrimonio(patrimonio_id: int, 
-    service: PatrimonioServiceImpl = Depends(get_patrimonio_service),
+@router.get("/{emprestimo_id}", response_model=EmprestimoResponse)
+async def get_emprestimo(emprestimo_id: int, 
+    service: EmprestimoServiceImpl = Depends(get_emprestimo_service),
     current_user: User = Depends(get_current_user),
 ):
-    patrimonio = await service.get_by_id(patrimonio_id)
-    if patrimonio is None:
-        raise HTTPException(status_code=404, detail="patrimonio não encontrado")
-    return patrimonio
+    emprestimo = await service.get_by_id(emprestimo_id)
+    if emprestimo is None:
+        raise HTTPException(status_code=404, detail="emprestimo não encontrado")
+    return emprestimo
 
 @router.patch("/{emprestimo_id}", response_model=EmprestimoResponse)
 async def update_emprestimo(
@@ -61,6 +62,7 @@ async def update_emprestimo(
     try:
         emprestimo = await service.update(
             emprestimo_id,
+            patrimonio_id=data.patrimonio_id,
             usuario_responsavel_id=data.usuario_responsavel_id,
             setor_id=data.setor_id,
             data_saida=data.data_saida,
