@@ -8,7 +8,8 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from app.core.database import Base
-from app.models import patrimonio, emprestimo
+from app.models import emprestimo
+from app.patrimonios.models import patrimonio
 from app.movimentacoes.models import movimentacao
 from app.estoques.models import estoque
 from app.produtos.models import produto
