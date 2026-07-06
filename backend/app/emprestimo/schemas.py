@@ -1,26 +1,35 @@
 from pydantic import BaseModel
 
-class PatrimonioCreate(BaseModel):
-    produto_id: int
+class EmprestimoCreate(BaseModel):
+    usuario_responsavel_id: int
+    setor_id: int
+    setor_id: int
+    data_saida: str
+    data_prevista: str
+    data_devolucao: str | None
     status: str
-    numero_patrimonio: str
-    serial_number: str | None
 
-class PatrimonioResponse(BaseModel):
+class EmprestimoResponse(BaseModel):
     id: int
-    produto_id: int
+    usuario_responsavel_id: int
+    setor_id: int
+    setor_id: int
+    data_saida: str
+    data_prevista: str
+    data_devolucao: str | None
     status: str
-    numero_patrimonio: str | None
-    serial_number: str | None
 
     class Config:
         from_attributes = True
 
-class PatrimonioListResponse(BaseModel):
-    patrimonios: list[PatrimonioResponse]
+class EmprestimoListResponse(BaseModel):
+    emprestimos: list[EmprestimoResponse]
 
-class PatrimonioUpdate(BaseModel):
-    produto_id: int
+class EmprestimoUpdate(BaseModel):
+    usuario_responsavel_id: int
+    setor_id: int
+    setor_id: int
+    data_saida: str
+    data_prevista: str
+    data_devolucao: str | None
     status: str
-    numero_patrimonio: str | None
-    serial_number: str | None

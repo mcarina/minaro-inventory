@@ -117,10 +117,10 @@ class EmprestimoServiceImpl(EmprestimoService):
         return await self.repository.update(emprestimo)
 
         
-    # delete patrimonio service
-    async def delete(self, patrimonio_id: int) -> bool:
-        patrimonio = await self.repository.get_by_id(patrimonio_id)
-        if patrimonio is None:
+    # delete emprestimo service
+    async def delete(self, emprestimo_id: int) -> bool:
+        emprestimo = await self.repository.get_by_id(emprestimo_id)
+        if emprestimo is None:
             return False
         await self.repository.delete(patrimonio)
         return True
