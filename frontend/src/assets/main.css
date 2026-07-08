@@ -1,5 +1,24 @@
 @import './base.css';
 
+:root {
+  /* cor principal (botões, links, ações) */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+
+  /* neutros (texto, fundo, bordas) */
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-background: #f9fafb;
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+
+  /* semânticas (status) */
+  --color-success: #16a34a;   /* ex: DISPONIVEL, ativo=true */
+  --color-warning: #d97706;   /* ex: MANUTENCAO */
+  --color-danger: #dc2626;    /* ex: DESCARTADO, atrasado */
+  --color-info: #0891b2;      /* ex: EM_USO */
+}
+
 #app {
   max-width: 1280px;
   margin: 0 auto;
