@@ -58,3 +58,7 @@ docker compose up -d
 ```
 http://localhost:8000/docs
 ```
+
+## Fluxo das tabelas no banco
+<img width="921" height="1111" alt="inventory drawio" src="https://github.com/user-attachments/assets/d3a9afb3-b16b-4106-9241-492669503ab1" />
+
